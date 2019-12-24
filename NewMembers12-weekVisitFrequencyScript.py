@@ -18,28 +18,24 @@ Inputs:
 '''
 
 # Inputs
-filePath = 'D:\\Documents\\CoachAi\\Club Data Analysis\\FFAus\\20191129 - FFA data\\'
+filepath = 'D:\\Documents\\CoachAi\\Club Data Analysis\\Inverclyde\\All data\\'
 dateFormat1 = '%Y-%m-%d'
 dateFormat2 = '%m/%d/%Y'
 dateFormat3 = '%d/%m/%Y'
 dateFormat4 = '%d-%m-%y'
-analysisStartDate = datetime.datetime(2019, 9, 2)
-analysisWeeks = 10
+dateFormat5 = '%Y%m%d'
+analysisStartDate = datetime.datetime(2019, 8, 1)
+analysisWeeks = 12
 
 
 # Import files
-CoachAiUsers = pandas.read_csv(filePath + "CoachAi Users.csv", dtype={"MemberId": str})
-Contacts = pandas.read_csv(filePath + "Cleaned Contacts Data.csv", dtype={"ID": str})
-Attendance = pandas.read_csv(filePath + "Attendance data (Sorted by ID).csv", dtype={"ID": str})
+CoachAiUsers = pandas.read_csv(filepath + "CoachAi Users (Cleaned).csv", dtype={"MemberId": str})
+Contacts = pandas.read_csv(filepath + "Contacts Data (Cleaned).csv", dtype={"ID": str})
+Attendance = pandas.read_csv(filepath + "Attendance Data (Cleaned).csv", dtype={"ID": str})
 
 # Convert date strings to datetime objects in all files
-Contacts.JoinDate = Contacts.JoinDate.str.slice(0, 10)
 Contacts['JoinDate'] = pandas.to_datetime(Contacts['JoinDate'], format=dateFormat1)
-
-#CoachAiUsers.Join = CoachAiUsers.Join.str.slice(0, 10)
-#CoachAiUsers['Join'] = pandas.to_datetime(CoachAiUsers['Join'], format=dateFormat1)
-
-Attendance.VisitDate = Attendance.VisitDate.str.slice(0, 10)
+CoachAiUsers['Join'] = pandas.to_datetime(CoachAiUsers['Join'], format=dateFormat1)
 Attendance['VisitDate'] = pandas.to_datetime(Attendance['VisitDate'], format=dateFormat1)
 
 
@@ -71,5 +67,5 @@ for memberId in IdList:
         row = [memberId, site, usageStatus, joinDate, periodEndDate, avgVisits]
         csvList.append(row)
 
-analysis.WriteListToCsv(csvList, 'New Member Analysis (By Join Date).csv')
+analysis.WriteListToCsv(csvList, datetime.date.today().strftime(dateFormat1) + ' - ' + str(analysisWeeks) + ' Week New Member Analysis.csv', filepath)
 

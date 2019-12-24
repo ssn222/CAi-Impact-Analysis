@@ -137,29 +137,48 @@ def GetCoachAiUsageStatus(df, memberId):
     
     return usageStatus
 
-def NormalizeDateFormat(df, dateColumnName, inputFormat):
+def NormalizeDateFormat(df, column, dateFormat):
     '''
-        Changes date format of dataframe column
+        Receives a csv file with a date column, creates a new csv file where the date column's format has been normalized
     '''
-    df[dateColumnName] = pandas.to_datetime(df[dateColumnName], format=inputFormat)
+    
+    df[column] = pandas.to_datetime(df[column], format=dateFormat)
     return df
 
-def SortAttendanceDataByID(attendanceFileName, sliceStart, sliceEnd, dateFormat):
-    #filePath = "D:\\Documents\\Jupyter Notebooks\\EA Data for analysis\\"
-    AttendanceDF = pandas.read_csv(attendanceFileName)
+def CleanContactsDF(df):
+    '''
+    Parameters
+    ----------
+    df : pandas dataframe containing contacts data
 
-    # Convert dates from string to datetime objects
-    AttendanceDF.VisitDate = AttendanceDF.VisitDate.str.slice(sliceStart, sliceEnd)
-    AttendanceDF['VisitDate'] = pandas.to_datetime(AttendanceDF['VisitDate'], format=dateFormat)
+    Returns
+    -------
+    pandas dataframe containing contacts sorted by index (ID) and with duplicates removed
 
-    # Sort by index
-    AttendanceDF.sort_values(["ID", "VisitDate"], inplace=True)
+    '''
+    df.sort_values(['ID', 'JoinDate'], inplace = True)
+    df.drop_duplicates('ID', inplace = True)
+    return df
 
-    #Write to csv
-    AttendanceDF.to_csv("Attendance data (Sorted by ID).csv", index=False)
+def SortAttendanceDataByID(df):
+    '''
+    Parameters
+    ----------
+    df : pandas dataframe containing attendance data
 
-def WriteListToCsv(listName, fileName):
-    with open(fileName, 'w', newline='') as csvFile:
+    Returns
+    -------
+    pandas dataframe containing attendance sorted by ID then VisitDate
+
+    '''
+    
+    df['VisitDate'] = pandas.to_datetime(df['VisitDate'], format='%Y-%m-%d')
+    df.sort_values(["ID", "VisitDate"], inplace=True)
+    return df
+    
+
+def WriteListToCsv(listName, fileName, filepath):
+    with open(filepath + fileName, 'w', newline='') as csvFile:
         writer = csv.writer(csvFile)    
         writer.writerows(listName)
         
