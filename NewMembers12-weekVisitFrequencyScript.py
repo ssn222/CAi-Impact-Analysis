@@ -3,37 +3,44 @@ import datetime
 import coachaiAnalysisModule as analysis
 
 '''
-Requires 3 files:
+Requires 3 files: (Filename - Minimum required columns)
     CoachAi Users.csv - MemberId,Status,Join,SiteId
-    Contacts Data.csv - ID,Age,Sex,JoinDate,MembershipType
-    Attendance data (Sorted by ID).csv - ID,VisitDate(,VisitTime,Entrance) *Sorted by ID, JoinDate
+    Contacts Data.csv - ID,JoinDate, SiteId
+    Attendance data.csv - ID,VisitDate(,VisitTime,Entrance) *Sorted by ID, JoinDate
     
 Inputs:
-    dateFormat = Format of date strings in club files
-        2019-12-31 - '%Y-%m-%d'
-        20/10/2019 - '%d/%m/%Y'
-        
+    filepath = 'D:\\Documents\\CoachAi\\Club Data Analysis\\Inverclyde\\All data\\'
+    contactsFile = "Contacts Data (Cleaned).csv"
+    attendanceFile = "Attendance Data (Cleaned).csv"
+    coachaiFile = "CoachAi Users (Cleaned).csv"
+    analysisStartDate = datetime.datetime(2019, 1, 1)  
     analysisWeeks = Analysis period (i.e.: visit frequency over the first X weeks of membership)
         
 '''
 
-# Inputs
-filepath = 'D:\\Documents\\CoachAi\\Club Data Analysis\\Inverclyde\\All data\\'
-dateFormat1 = '%Y-%m-%d'
-dateFormat2 = '%m/%d/%Y'
-dateFormat3 = '%d/%m/%Y'
-dateFormat4 = '%d-%m-%y'
-dateFormat5 = '%Y%m%d'
-analysisStartDate = datetime.datetime(2019, 8, 1)
-analysisWeeks = 12
 
+
+# Inputs
+filepath = 'D:\\Documents\\CoachAi\\Club Data\\FFAus\\20193012 - FFA Historical data\\'
+contactsFile = "Contacts Data (1.19 - 8.19) (Cleaned).csv"
+attendanceFile = "Attendance Data (1.19 - 8.19) (Cleaned).csv"
+coachaiFile = "CoachAi Users.csv"
+analysisStartDate = datetime.datetime(2019, 6, 1)
+analysisEndDate = datetime.datetime(2019, 8, 30)
+dataEndDate = datetime.datetime(2019, 12, 16)
+analysisWeeks = 10
+
+# Initialize timer
+runStartTime = datetime.datetime.now()
 
 # Import files
-CoachAiUsers = pandas.read_csv(filepath + "CoachAi Users (Cleaned).csv", dtype={"MemberId": str})
-Contacts = pandas.read_csv(filepath + "Contacts Data (Cleaned).csv", dtype={"ID": str})
-Attendance = pandas.read_csv(filepath + "Attendance Data (Cleaned).csv", dtype={"ID": str})
+CoachAiUsers = pandas.read_csv(filepath + coachaiFile, dtype={"MemberId": str})
+Contacts = pandas.read_csv(filepath + contactsFile, dtype={"ID": str})
+Attendance = pandas.read_csv(filepath + attendanceFile, dtype={"ID": str})
 
 # Convert date strings to datetime objects in all files
+dateFormat1 = '%Y-%m-%d'
+dateFormat2 = '%Y%m%d'
 Contacts['JoinDate'] = pandas.to_datetime(Contacts['JoinDate'], format=dateFormat1)
 CoachAiUsers['Join'] = pandas.to_datetime(CoachAiUsers['Join'], format=dateFormat1)
 Attendance['VisitDate'] = pandas.to_datetime(Attendance['VisitDate'], format=dateFormat1)
@@ -50,22 +57,34 @@ IdList = []
 for contact in Contacts.iterrows():
     IdList.append(contact[0])
 
-# Initialize list that will be printed to csv
-csvList = []
-csvList.append(['ID', 'Site', 'Status', 'JoinDate', 'AnalysisEnd', 'AvgVisits'])
+# Initialize results dataframe that will be analyzed and printed to csv
+resultsDf = pandas.DataFrame(columns = ['ID', 'Site', 'Status', 'JoinDate', 'AvgVisits'])
 
 
 # For each ID, get their info and calculate their average visit frequency during their first X weeks
 for memberId in IdList:
     joinDate = analysis.GetJoinDateById(Contacts, memberId)
     
-    if joinDate >= analysisStartDate:
+    if (joinDate >= analysisStartDate) and (joinDate < analysisEndDate) and (joinDate + datetime.timedelta(weeks=analysisWeeks) < dataEndDate):
         usageStatus = analysis.GetCoachAiUsageStatus(CoachAiUsers, memberId)
         site = analysis.GetSiteById(Contacts, memberId)
         periodEndDate = joinDate + datetime.timedelta(weeks=analysisWeeks)
         avgVisits = analysis.CountVisitsBetweenDates(Attendance, memberId, joinDate, joinDate + datetime.timedelta(weeks=analysisWeeks)) / analysisWeeks
-        row = [memberId, site, usageStatus, joinDate, periodEndDate, avgVisits]
-        csvList.append(row)
+        resultsDf = resultsDf.append({'ID': memberId, 'Site': site, 'Status': usageStatus, 'JoinDate': joinDate, 'AvgVisits': avgVisits}, ignore_index=True)
 
-analysis.WriteListToCsv(csvList, datetime.date.today().strftime(dateFormat1) + ' - ' + str(analysisWeeks) + ' Week New Member Analysis.csv', filepath)
+# Write results to csv
+resultsDf.to_csv(filepath + datetime.date.today().strftime(dateFormat2) + ' - ' + str(analysisWeeks) + ' Week New Member Analysis.csv', index=False)
 
+# Prepare and display results summary
+controlDf = resultsDf.loc[resultsDf['Status'] == 'No']
+usersDf = resultsDf.loc[resultsDf['Status'] != 'No']
+
+print("Summary of Results - " + str(analysisWeeks) + " Weeks:")
+analysis.PrintResultsSummary(resultsDf, 'Total')
+analysis.PrintResultsSummary(controlDf, 'Non-users')
+analysis.PrintResultsSummary(usersDf, 'Users')
+
+# End timer
+runEndTime = datetime.datetime.now()
+elapsedTime = runEndTime - runStartTime
+print("Total run time: " + str(elapsedTime))

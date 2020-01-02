@@ -160,6 +160,31 @@ def CleanContactsDF(df):
     df.drop_duplicates('ID', inplace = True)
     return df
 
+def PrintResultsSummary(df, groupName):
+    '''
+    Parameters
+    ----------
+    df : pandas dataframe containing the results of VisitFrequency analysis
+    groupName : string with name of the group whose data is contained in df
+
+    Returns
+    -------
+
+    '''
+    dfLength = len(df)
+    if dfLength > 0:
+        print()
+        print(groupName + " average: " + str(df['AvgVisits'].mean()) + " (" + str(dfLength) + " rows)")
+        print("High risk [0 - 0.8): " + str(len(df.loc[df['AvgVisits'] < 0.8].index)/dfLength))
+        print("Medium risk [0.8 - 1.3): " + str(len(df.loc[(df['AvgVisits'] >= 0.8) & (df['AvgVisits'] < 1.3)].index)/dfLength))
+        print("Low risk [1.3 - 2): " + str(len(df.loc[(df['AvgVisits'] >= 1.3) & (df['AvgVisits'] < 2)].index)/dfLength))
+        print("Regulars [2 - ): " + str(len(df.loc[df['AvgVisits'] >= 2].index)/dfLength))
+        print()
+        print(df.head())
+        print()
+    else:
+        print(groupName + " had no results")
+
 def SortAttendanceDataByID(df):
     '''
     Parameters
