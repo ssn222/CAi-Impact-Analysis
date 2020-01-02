@@ -7,8 +7,8 @@ Toolkit for cleaning data files via python shell.  Load correct file and uncomme
 '''
 
 # Data folder path
-filepath = "D:\\Documents\\CoachAi\\Club Data\\FFAus\\20193012 - FFA Historical data\\"
-file = "Attendance Data (1.19 - 12.19).csv"
+filepath = "D:\\Documents\\CoachAi\\Club Data\\FFAus\\20200102 - FFA Historical analysis\\20190102 - Second analysis\\"
+file = "Contacts data.csv"
 
 # Reference for date formats
 dateFormat1 = '%Y-%m-%d'
@@ -16,30 +16,53 @@ dateFormat2 = '%m/%d/%Y'
 dateFormat3 = '%d/%m/%Y'
 dateFormat4 = '%d-%m-%y'
 
-# Import file to dataframe
-df = pandas.read_csv(filepath + file, dtype={"ID": str})
+
 
 '''
 # FUNCTION 1: Normalize date formats by converting date strings to datetime format
 # Inputs
+df = pandas.read_csv(filepath + file)
 sliceStart = 0
-sliceEnd = 8
-dateColumn = 'VisitDate'
-df.VisitDate = df.VisitDate.str.slice(sliceStart, sliceEnd)
+sliceEnd = 10
+dateColumn = 'CancelDate'
+df.CancelDate = df.CancelDate.str.slice(sliceStart, sliceEnd)
 
-df = analysis.NormalizeDateFormat(df, dateColumn, dateFormat4)
+df = analysis.NormalizeDateFormat(df, dateColumn, dateFormat3)
 '''
 
 '''
 # FUNCTION 2: Clean Contacts data - sort by ID and remove duplicates
+df = pandas.read_csv(filepath + file, dtype={"ID": str})
 print("Dataframe length before cleaning: " + str(len(df.index)))
 df = analysis.CleanContactsDF(df)
 print("Dataframe length after cleaning: " + str(len(df.index)))
 '''
 
 '''
-#FUNCTION 3: Sort attendance data by ID and VisitDate **Requires VisitDate to be normalized
+# FUNCTION 3: Sort attendance data by ID and VisitDate **Requires VisitDate to be normalized
+df = pandas.read_csv(filepath + file, dtype={"ID": str})
 df = analysis.SortAttendanceDataByID(df)
+'''
+
+'''
+# FUNCTION 4: Drop a column from a csv
+# Inputs
+columnName = "Club ID"
+
+df = pandas.read_csv(filepath + file)
+df = df.drop(columnName, axis=1)
+'''
+
+'''
+# FUNCTION 5: Rearrange existing columns in a csv
+# Inputs
+column1 = "ID"
+column2 = "Site"
+column3 = "JoinDate"
+column4 = "CancelDate"
+
+df = pandas.read_csv(filepath + file)
+df = df[[column1, column2, column3, column4]]
 '''
 
 

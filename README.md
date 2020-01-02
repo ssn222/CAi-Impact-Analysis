@@ -1,7 +1,9 @@
 # CAi-Impact-Analysis
 
-Files Required:
-
+Files Required: (Filename - Minimum required columns)
+    CoachAi Users.csv - MemberId,Status,Join,SiteId
+    Contacts Data.csv - ID,JoinDate, SiteId
+    Attendance data.csv - ID,VisitDate(,VisitTime,Entrance) *Sorted by ID, JoinDate
 File Formats:
 
 Inverclyde Analysis Steps:

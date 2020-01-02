@@ -7,28 +7,18 @@ Requires 3 files: (Filename - Minimum required columns)
     CoachAi Users.csv - MemberId,Status,Join,SiteId
     Contacts Data.csv - ID,JoinDate, SiteId
     Attendance data.csv - ID,VisitDate(,VisitTime,Entrance) *Sorted by ID, JoinDate
-    
-Inputs:
-    filepath = 'D:\\Documents\\CoachAi\\Club Data Analysis\\Inverclyde\\All data\\'
-    contactsFile = "Contacts Data (Cleaned).csv"
-    attendanceFile = "Attendance Data (Cleaned).csv"
-    coachaiFile = "CoachAi Users (Cleaned).csv"
-    analysisStartDate = datetime.datetime(2019, 1, 1)  
-    analysisWeeks = Analysis period (i.e.: visit frequency over the first X weeks of membership)
         
 '''
 
-
-
 # Inputs
-filepath = 'D:\\Documents\\CoachAi\\Club Data\\FFAus\\20193012 - FFA Historical data\\'
-contactsFile = "Contacts Data (1.19 - 8.19) (Cleaned).csv"
-attendanceFile = "Attendance Data (1.19 - 8.19) (Cleaned).csv"
+filepath = 'D:\\Documents\\CoachAi\\Club Data\\FFAus\\20200102 - FFA Historical analysis\\20190102 - Second analysis\\'
+contactsFile = "Contacts data (Cleaned).csv"
+attendanceFile = "Attendance data (Cleaned).csv"
 coachaiFile = "CoachAi Users.csv"
-analysisStartDate = datetime.datetime(2019, 6, 1)
+analysisStartDate = datetime.datetime(2019, 1, 1)
 analysisEndDate = datetime.datetime(2019, 8, 30)
-dataEndDate = datetime.datetime(2019, 12, 16)
-analysisWeeks = 10
+dataEndDate = datetime.datetime(2019, 8, 30)
+analysisWeeks = 12
 
 # Initialize timer
 runStartTime = datetime.datetime.now()
