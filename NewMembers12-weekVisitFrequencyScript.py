@@ -11,13 +11,13 @@ Requires 3 files: (Filename - Minimum required columns)
 '''
 
 # Inputs
-filepath = 'D:\\Documents\\CoachAi\\Club Data\\FFAus\\20200102 - FFA Historical analysis\\20190102 - Second analysis\\'
-contactsFile = "Contacts data (Cleaned).csv"
-attendanceFile = "Attendance data (Cleaned).csv"
+filepath = 'D:\\Documents\\CoachAi\\Club Data\\FFAus\\Analysis 3 (20200128)\\'
+contactsFile = "Cleaned Contacts Data.csv"
+attendanceFile = "Attendance data (20190101 - 20200120) (Cleaned).csv"
 coachaiFile = "CoachAi Users.csv"
-analysisStartDate = datetime.datetime(2019, 1, 1)
-analysisEndDate = datetime.datetime(2019, 8, 30)
-dataEndDate = datetime.datetime(2019, 8, 30)
+analysisStartDate = datetime.datetime(2019, 9, 1)
+analysisEndDate = datetime.datetime(2020, 1, 1)
+dataEndDate = datetime.datetime(2020, 1, 20)
 analysisWeeks = 12
 
 # Initialize timer

@@ -7,8 +7,8 @@ Toolkit for cleaning data files via python shell.  Load correct file and uncomme
 '''
 
 # Data folder path
-filepath = "D:\\Documents\\CoachAi\\Club Data\\FFAus\\20200102 - FFA Historical analysis\\20190102 - Second analysis\\"
-file = "Contacts data.csv"
+filepath = "D:\\Documents\\CoachAi\\Club Data\\FFAus\\Analysis 3 (20200128)\\"
+file = "Attendance data (20190101 - 20200120).csv"
 
 # Reference for date formats
 dateFormat1 = '%Y-%m-%d'
@@ -24,10 +24,10 @@ dateFormat4 = '%d-%m-%y'
 df = pandas.read_csv(filepath + file)
 sliceStart = 0
 sliceEnd = 10
-dateColumn = 'CancelDate'
-df.CancelDate = df.CancelDate.str.slice(sliceStart, sliceEnd)
+dateColumn = 'VisitDate'
+df.VisitDate = df.VisitDate.str.slice(sliceStart, sliceEnd)
 
-df = analysis.NormalizeDateFormat(df, dateColumn, dateFormat3)
+df = analysis.NormalizeDateFormat(df, dateColumn, dateFormat1)
 '''
 
 '''
@@ -47,7 +47,7 @@ df = analysis.SortAttendanceDataByID(df)
 '''
 # FUNCTION 4: Drop a column from a csv
 # Inputs
-columnName = "Club ID"
+columnName = "Club"
 
 df = pandas.read_csv(filepath + file)
 df = df.drop(columnName, axis=1)

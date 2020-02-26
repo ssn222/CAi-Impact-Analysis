@@ -100,6 +100,19 @@ def GetJoinDateById(df, memberId):
         
     return startDate
 
+def GetCancelDateById(df, memberId):
+    '''
+        Returns join date from Contacts df
+    '''
+    try:
+        cancelDate = df.at[memberId, 'CancelDate']
+        if isinstance(cancelDate, numpy.ndarray):
+            cancelDate = to_datetime(cancelDate[0])
+    except:
+        cancelDate = "None"
+        
+    return cancelDate
+
 def GetSexById(df, memberId):
     '''
         Returns sex from Contacts df
