@@ -1,5 +1,7 @@
 # CAi-Impact-Analysis
 
+A toolkit for analyzing member engagement, retention, and club profitability using data taken from customers' club management software
+
 Files Required: (Filename - Minimum required columns)
     CoachAi Users.csv - MemberId,Status,Join,SiteId
     Contacts Data.csv - ID,JoinDate, SiteId
